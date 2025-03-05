@@ -107,10 +107,6 @@ def get_csrf_token(request):
 
 
 def add_months(source_date, months):
-    """
-    Adds a given number of months to source_date.
-    Handles month/year roll-over.
-    """
     month = source_date.month - 1 + months
     year = source_date.year + month // 12
     month = month % 12 + 1
@@ -119,28 +115,16 @@ def add_months(source_date, months):
 
 
 def generate_payment_schedule(loan):
-    """
-    Generate a payment schedule for a loan.
-    EMI Formula:
-      EMI = P * r * (1 + r)^n / ((1 + r)^n - 1)
-    where:
-      P = principal (loan.amount)
-      r = monthly interest rate (loan.interest_rate / 100 / 12)
-      n = number of months (loan.tenure)
-    """
     schedule = []
     principal = loan.amt
-    n = loan.tenure  # total number of months
-    # Monthly interest rate as a decimal
+    n = loan.tenure
     r = (loan.interest / 100) / 12
-
 
     if r != 0:
         emi = principal * r * pow(1 + r, n) / (pow(1 + r, n) - 1)
     else:
         emi = principal / n
 
-    # Use loan.created_at as the start date if available; otherwise, use today.
     start_date = loan.created_at.date() if loan.created_at else datetime.now().date()
 
     for i in range(1, n + 1):
@@ -154,14 +138,9 @@ def generate_payment_schedule(loan):
 
 
 class PaymentScheduleView(APIView):
-    """
-    GET /api/loans/<pk>/schedule/
-    Returns the generated payment schedule for the specified loan.
-    """
 
     def get(self, request, pk, *args, **kwargs):
         try:
-            # Ensure the loan belongs to the current user (or adjust as per your access rules)
             loan = Loan.objects.get(pk=pk, user=request.user)
         except Loan.DoesNotExist:
             return Response({"error": "Loan not found."}, status=status.HTTP_404_NOT_FOUND)
@@ -172,3 +151,23 @@ class PaymentScheduleView(APIView):
             "loan_id": loan.pk,
             "payment_schedule": schedule
         }, status=status.HTTP_200_OK)
+
+
+class LoanDeleteView(generics.DestroyAPIView):
+
+    serializer_class = LoanSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+
+        if self.request.user.is_staff or self.request.user.is_superuser:
+            return Loan.objects.all()
+        return Loan.objects.filter(user=self.request.user)
+
+    def delete(self, request, *args, **kwargs):
+        try:
+            loan = self.get_object()
+            loan.delete()
+            return Response({"message": "Loan deleted successfully."}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
