@@ -9,6 +9,7 @@ The Loan Management System is a Django-based web application that allows users t
 - **Loan Application:** Apply for loans with details like amount, tenure, and purpose.
 - **View Loans:** View active and closed loans.
 - **Loan Status:** Track loan approval, rejection, or closure.
+- **View Monthly Pay Date:** View monthly pay amount and time
 
 ### Admin Features
 - **Loan Management:** Approve, reject, or close loans.
@@ -21,6 +22,7 @@ The Loan Management System is a Django-based web application that allows users t
 - **Authentication:** JWT 
 - **Email Service:** SendGrid for OTP emails
 - **API Testing:** Postman
+- **Deployment:** Rende
 
 ## API Endpoints
 ### Authentication
@@ -94,3 +96,7 @@ To deploy on Render:
 
 ## License
 This project is licensed under the MIT License.
+
+
+##
+Admin side Login-- 
