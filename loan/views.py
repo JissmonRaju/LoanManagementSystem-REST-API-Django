@@ -129,12 +129,12 @@ def generate_payment_schedule(loan):
       n = number of months (loan.tenure)
     """
     schedule = []
-    principal = loan.amount
+    principal = loan.amt
     n = loan.tenure  # total number of months
     # Monthly interest rate as a decimal
     r = (loan.interest_rate / 100) / 12
 
-    # Calculate EMI; if r is 0 (interest-free), simply divide principal equally.
+    
     if r != 0:
         emi = principal * r * pow(1 + r, n) / (pow(1 + r, n) - 1)
     else:
@@ -148,7 +148,7 @@ def generate_payment_schedule(loan):
         schedule.append({
             "installment_no": i,
             "due_date": due_date.isoformat(),
-            "amount": round(emi, 2)
+            "amt": round(emi, 2)
         })
     return schedule
 
