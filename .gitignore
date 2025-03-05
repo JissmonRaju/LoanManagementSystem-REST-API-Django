@@ -1,0 +1,24 @@
+# Ignore environment variables
+.env
+
+# Python stuff
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+
+# Django stuff
+db.sqlite3
+/media/
+*.log
+
+# IDE and editor settings
+.vscode/
+.idea/
+
+# Byte-compiled files
+*.class
+
+# Virtual environments
+venv/
