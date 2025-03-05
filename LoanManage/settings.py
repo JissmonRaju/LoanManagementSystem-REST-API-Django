@@ -12,7 +12,9 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'your-fallback-secret-key')
 JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', SECRET_KEY)
 
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
+
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
