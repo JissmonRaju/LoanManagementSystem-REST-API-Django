@@ -11,7 +11,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'your-fallback-secret-key')
 JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', SECRET_KEY)
 
-DEBUG = os.getenv('DEBUG', 'True') == 'True'
+
+DEBUG = os.getenv('DEBUG', 'False') == 'False'
+
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
