@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from loan.views import loan_list, LoanListCreateView, LoanDetailView, LoanAdminView, LoanStatusUpdateView, \
-    loan_foreclose, get_csrf_token
+from loan.views import loan_list, LoanListCreateView, LoanDetailView, LoanAdminView, LoanStatusUpdateView,loan_foreclose, get_csrf_token,PaymentScheduleView
 from django.http import HttpResponse
 
 
@@ -23,6 +22,7 @@ urlpatterns = [
     path('api/auth/', include('authentication.urls')),
     path('loans/', LoanListCreateView.as_view(), name='loan-list-create'),
     path('loans/<int:pk>/', LoanDetailView.as_view(), name='loan-detail'),
+    path('api/loans/<int:pk>/schedule/', PaymentScheduleView.as_view(), name='payment-schedule'),
     path('admin/loans/', LoanAdminView.as_view(), name='admin-loan-list'),
     path('api/admin/loans/<int:loan_id>/status/', LoanStatusUpdateView.as_view(), name='loan-status-update'),
     path('loans/<int:pk>/foreclose/', loan_foreclose, name='loan-foreclose'),

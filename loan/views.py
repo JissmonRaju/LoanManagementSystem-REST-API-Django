@@ -7,6 +7,11 @@ from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
+import calendar
+from math import pow
+from datetime import datetime
+from rest_framework.views import APIView
+from rest_framework import status
 
 
 @api_view(['GET', 'POST'])
@@ -99,3 +104,71 @@ def loan_foreclose(request, pk):
 def get_csrf_token(request):
     csrf_token = get_token(request)
     return JsonResponse({'csrfToken': csrf_token})
+
+
+def add_months(source_date, months):
+    """
+    Adds a given number of months to source_date.
+    Handles month/year roll-over.
+    """
+    month = source_date.month - 1 + months
+    year = source_date.year + month // 12
+    month = month % 12 + 1
+    day = min(source_date.day, calendar.monthrange(year, month)[1])
+    return datetime(year, month, day).date()
+
+
+def generate_payment_schedule(loan):
+    """
+    Generate a payment schedule for a loan.
+    EMI Formula:
+      EMI = P * r * (1 + r)^n / ((1 + r)^n - 1)
+    where:
+      P = principal (loan.amount)
+      r = monthly interest rate (loan.interest_rate / 100 / 12)
+      n = number of months (loan.tenure)
+    """
+    schedule = []
+    principal = loan.amount
+    n = loan.tenure  # total number of months
+    # Monthly interest rate as a decimal
+    r = (loan.interest_rate / 100) / 12
+
+    # Calculate EMI; if r is 0 (interest-free), simply divide principal equally.
+    if r != 0:
+        emi = principal * r * pow(1 + r, n) / (pow(1 + r, n) - 1)
+    else:
+        emi = principal / n
+
+    # Use loan.created_at as the start date if available; otherwise, use today.
+    start_date = loan.created_at.date() if loan.created_at else datetime.now().date()
+
+    for i in range(1, n + 1):
+        due_date = add_months(start_date, i)
+        schedule.append({
+            "installment_no": i,
+            "due_date": due_date.isoformat(),
+            "amount": round(emi, 2)
+        })
+    return schedule
+
+
+class PaymentScheduleView(APIView):
+    """
+    GET /api/loans/<pk>/schedule/
+    Returns the generated payment schedule for the specified loan.
+    """
+
+    def get(self, request, pk, *args, **kwargs):
+        try:
+            # Ensure the loan belongs to the current user (or adjust as per your access rules)
+            loan = Loan.objects.get(pk=pk, user=request.user)
+        except Loan.DoesNotExist:
+            return Response({"error": "Loan not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        schedule = generate_payment_schedule(loan)
+        return Response({
+            "status": "success",
+            "loan_id": loan.pk,
+            "payment_schedule": schedule
+        }, status=status.HTTP_200_OK)
