@@ -2,6 +2,12 @@ from django.contrib import admin
 from django.urls import path, include
 from loan.views import loan_list, LoanListCreateView, LoanDetailView, LoanAdminView, LoanStatusUpdateView, \
     loan_foreclose, get_csrf_token
+from django.http import HttpResponse
+
+
+def home(request):
+    return HttpResponse("Loan Management System is running!")
+
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -9,6 +15,7 @@ from rest_framework_simplejwt.views import (
 )
 
 urlpatterns = [
+    path('', home, name='home'),
     path('admin/', admin.site.urls),
     path('api/loans/', loan_list),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
