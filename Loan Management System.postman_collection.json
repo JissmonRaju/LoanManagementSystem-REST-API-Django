@@ -1,0 +1,40 @@
+{
+	"info": {
+		"_postman_id": "dedbff9c-1a9e-4c26-b822-55d78b490a50",
+		"name": "Loan Management System",
+		"description": "# <u>Overview</u>\n\nREST API for managing loans with JWT authentication, OTP verification, and monthly compound interest calculations.\n\n## <u>D</u><u><b>efine Environment Variables</b></u>\n\n- `base_url`: [https://loanmanagementsystem-mcil.onrender.com/](https://loanmanagementsystem-mcil.onrender.com/)\n    \n- `token`: JWT token for authenticated requests.\n    \n\n### <u><b>Add API Requests</b></u>\n\n**1\\. Authentication**\n\n| Method | Endpoint | Description |\n| --- | --- | --- |\n| POST | `/api/auth/register/` | User registration |\n| POST | `/api/auth/request-otp/`  <br>OR  <br>`/api/auth/login/` | Request OTP for login |\n| POST | `/api/auth/verify-otp/` | Verify OTP to get JWT token |\n| POST | `/api/auth/logout/` | Logout (blacklist token) |\n\n**Example: User Registration**\n\n- { \"email\": \"[user@example.com](https://mailto:user@example.com)\", \"password\": \"securepassword123\"}\n    \n- { \"message\": \"OTP sent to [user@example.com](https://mailto:user@example.com)\"}\n    \n\n---\n\n#### **2: Loans (User)**\n\n| Method | Endpoint | Description |\n| --- | --- | --- |\n| POST | `/loans/` | Create a new loan |\n| GET | `/api/loans/`  <br>OR  <br>`/loans/` | List user loans |\n| GET | `/loans/{loan_id}/` | View loan details |\n| POST | `/loans/{loan_id}/foreclose/` | Foreclose loan |\n\n**Example: Create Loan**\n\n- { \"amt\": 10000, \"tenure\": 12, \"interest\": 10}\n    \n- Authorization: Bearer {{token}}\n    \n- { { \"loan_id\": 2, \"amt\": 10000, \"tenure\": 12, \"interest\": 10, \"total_to_pay\": 11047.13, \"monthly_pay\": 920.59 }}\n    \n\n---\n\n#### **Folder 3: Loans (Admin)**\n\n| Method | Endpoint | Description |\n| --- | --- | --- |\n| GET | `/admin/loans/` | List all loans (Admin) |\n| PATCH | `/api/admin/loans/{loan_id}/status/` | Update loan status |\n| DELETE | `/api/loans/{loan_id}/` | Delete a loan (Admin) |\n\n**Example: Update Loan Status (Admin)**\n\n- { \"status\": \"approved\"}\n    \n- Authorization: Bearer {{admin_token}}\n    \n- { \"status\": \"success\", \"message\": \"Loan status updated to APPROVED\"}\n    \n\n---",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40965007"
+	},
+	"item": [],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "id",
+			"value": "1"
+		},
+		{
+			"key": "base_url",
+			"value": "https://postman-rest-api-learner.glitch.me/"
+		}
+	]
+}
