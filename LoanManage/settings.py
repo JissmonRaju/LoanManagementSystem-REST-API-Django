@@ -6,6 +6,10 @@ import dj_database_url
 
 load_dotenv()
 
+
+print("DATABASE_URL:", os.getenv('DATABASE_URL'))
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'your-fallback-secret-key')
