@@ -111,3 +111,22 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'jissmonraju25@gmail.com')
 
 SENDGRID_SANDBOX_MODE_IN_DEBUG = os.getenv('SENDGRID_SANDBOX_MODE_IN_DEBUG', 'False') == 'True'
 SENDGRID_ECHO_TO_STDOUT = os.getenv('SENDGRID_ECHO_TO_STDOUT', 'True') == 'True'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': 'django_error.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}

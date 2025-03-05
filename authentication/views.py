@@ -18,6 +18,14 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = RegisterSerializer
 
+    def create(self, request, *args, **kwargs):
+        try:
+            return super().create(request, *args, **kwargs)
+        except Exception as e:
+            print(f"Error during registration: {e}")
+            return Response({'error': 'Something went wrong during registration.'},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 def generate_otp():
     return str(random.randint(100000, 999999))
